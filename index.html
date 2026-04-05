@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Меллстрой Мем + Счётчик БЕМ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Tailwind для совместимости со вторым кодом, но он не конфликтует -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* ========== ОСНОВНЫЕ СТИЛИ ПЕРВОГО КОДА (МЕМЫ) ========== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #07060b;
+            --bg-secondary: #0f0e17;
+            --bg-card: #161425;
+            --bg-card-hover: #1e1b30;
+            --accent-pink: #ff2e86;
+            --accent-purple: #7b2ff7;
+            --accent-cyan: #00d4ff;
+            --accent-yellow: #ffd600;
+            --accent-green: #00e676;
+            --accent-orange: #ff6d00;
+            --accent-red: #ff1744;
+            --text-primary: #ffffff;
+            --text-secondary: #9a96b0;
+            --text-muted: #5c5870;
+            --border-color: #2a2740;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(123, 47, 247, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(255, 46, 134, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.04) 0%, transparent 60%);
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; }
+            100% { opacity: 0.8; }
+        }
+
+        header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 50px 20px 40px;
+        }
+
+        .title-wrapper {
+            display: inline-block;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(20px, 4.5vw, 48px);
+            line-height: 1.4;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple), var(--accent-cyan), var(--accent-yellow));
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientMove 4s ease infinite;
+            filter: drop-shadow(0 0 30px rgba(255, 46, 134, 0.4));
+        }
+
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .title-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(ellipse, rgba(123, 47, 247, 0.2) 0%, transparent 70%);
+            z-index: -1;
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .subtitle {
+            margin-top: 16px;
+            font-size: clamp(14px, 2vw, 18px);
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .subtitle span {
+            color: var(--accent-pink);
+            font-weight: 700;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 4px;
+        }
+
+        /* ========== СТИЛИ СЧЁТЧИКА БЕМ (из второго кода) ========== */
+        .font-meme { font-family: 'Press Start 2P', cursive; }
+        .neon-text {
+            text-shadow: 0 0 10px #ff006e, 0 0 20px #ff006e, 0 0 40px #ff006e, 0 0 80px #ff006e;
+        }
+        .gradient-border {
+            position: relative;
+            background: #111118;
+            border-radius: 16px;
+        }
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 18px;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #ff006e);
+            background-size: 400% 400%;
+            animation: gradientShift 3s ease infinite;
+            z-index: -1;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .bem-counter {
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff006e, #8338ec);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .pulse-btn {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 0, 110, 0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(255, 0, 110, 0); }
+        }
+        .progress-bar {
+            height: 10px;
+            border-radius: 5px;
+            background: #1a1a2e;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 5px;
+            background: linear-gradient(90deg, #ff006e, #8338ec);
+            transition: width 0.3s ease;
+        }
+        .shake { animation: shake 0.5s ease; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        .floating-emoji {
+            position: fixed;
+            pointer-events: none;
+            font-size: 2rem;
+            z-index: 9999;
+            animation: floatUp 2s ease-out forwards;
+        }
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+            100% { opacity: 0; transform: translateY(-300px) rotate(360deg) scale(0.3); }
+        }
+        .achievement-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ff006e, #8338ec);
+            border-radius: 16px;
+            padding: 16px 24px;
+            z-index: 2000;
+            animation: slideInRight 0.5s ease, slideOutRight 0.5s ease 2.5s forwards;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        .sound-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: #1a1a2e;
+            border: 2px solid #333;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+        .sound-toggle:hover { border-color: #ff006e; transform: scale(1.1); }
+        .bem-container {
+            max-width: 550px;
+            margin: 0 auto 24px;
+            padding: 0 20px;
+        }
+
+        /* Стили поиска и фильтров (из первого кода) */
+        .search-wrap {
+            position: relative;
+            z-index: 10;
+            max-width: 550px;
+            margin: 0 auto 24px;
+            padding: 0 20px;
+        }
+        .search-box {
+            width: 100%;
+            padding: 14px 20px 14px 50px;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .search-box:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 0 4px rgba(123, 47, 247, 0.15);
+        }
+        .search-box::placeholder {
+            color: var(--text-muted);
+        }
+        .search-icon {
+            position: absolute;
+            left: 36px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+        .filters {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 0 20px 30px;
+        }
+        .filter-chip {
+            padding: 8px 18px;
+            border-radius: 50px;
+            border: 1.5px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .filter-chip:hover {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+            background: rgba(123, 47, 247, 0.08);
+        }
+        .filter-chip.active {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(123, 47, 247, 0.4);
+        }
+        .random-wrap {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 10;
+        }
+        .random-btn {
+            padding: 14px 36px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 6px 25px rgba(123, 47, 247, 0.35);
+        }
+        .random-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 35px rgba(123, 47, 247, 0.5);
+        }
+        .grid {
+            position: relative;
+            z-index: 10;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            padding: 0 24px 40px;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink), var(--accent-cyan));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .card:hover::after {
+            opacity: 1;
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent-purple);
+            background: var(--bg-card-hover);
+            box-shadow: 0 16px 40px rgba(123, 47, 247, 0.15), 0 0 0 1px rgba(123, 47, 247, 0.1);
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .card-emoji { font-size: 40px; line-height: 1; }
+        .card-tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        .tag-legend { background: rgba(255, 46, 134, 0.15); color: var(--accent-pink); border: 1px solid rgba(255, 46, 134, 0.3); }
+        .tag-funny { background: rgba(255, 214, 0, 0.15); color: var(--accent-yellow); border: 1px solid rgba(255, 214, 0, 0.3); }
+        .tag-shock { background: rgba(255, 23, 68, 0.15); color: var(--accent-red); border: 1px solid rgba(255, 23, 68, 0.3); }
+        .tag-classic { background: rgba(0, 212, 255, 0.15); color: var(--accent-cyan); border: 1px solid rgba(0, 212, 255, 0.3); }
+        .tag-philosophy { background: rgba(0, 230, 118, 0.15); color: var(--accent-green); border: 1px solid rgba(0, 230, 118, 0.3); }
+        .tag-quote { background: rgba(255, 109, 0, 0.15); color: var(--accent-orange); border: 1px solid rgba(255, 109, 0, 0.3); }
+        .card-phrase { font-size: clamp(17px, 2vw, 21px); font-weight: 800; line-height: 1.35; margin-bottom: 8px; color: var(--text-primary); }
+        .card-desc { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+        .copy-trigger {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            background: rgba(123, 47, 247, 0.12);
+            border: 1px solid rgba(123, 47, 247, 0.25);
+            border-radius: 8px;
+            color: var(--accent-purple);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .copy-trigger:hover { background: rgba(123, 47, 247, 0.25); }
+        .copy-trigger.copied { background: rgba(0, 230, 118, 0.15); border-color: rgba(0, 230, 118, 0.4); color: var(--accent-green); }
+        .like-area { display: flex; align-items: center; gap: 5px; }
+        .heart-btn { background: none; border: none; cursor: pointer; font-size: 18px; transition: transform 0.2s; padding: 4px; }
+        .heart-btn:hover { transform: scale(1.35); }
+        .heart-btn.liked { animation: heartPop 0.4s ease; }
+        @keyframes heartPop { 0% { transform: scale(1); } 40% { transform: scale(1.6); } 100% { transform: scale(1); } }
+        .like-count { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+        .no-data { text-align: center; padding: 80px 20px; color: var(--text-muted); font-size: 17px; display: none; }
+        .no-data .big-emoji { font-size: 56px; display: block; margin-bottom: 16px; }
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .overlay.show { display: flex; }
+        .modal-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent-purple);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            animation: modalSlide 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 80px rgba(123, 47, 247, 0.25);
+            position: relative;
+        }
+        @keyframes modalSlide {
+            from { opacity: 0; transform: scale(0.85) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-emoji { font-size: 64px; margin-bottom: 18px; }
+        .modal-phrase { font-size: 28px; font-weight: 900; margin-bottom: 12px; line-height: 1.3; }
+        .modal-tag { margin-bottom: 16px; }
+        .modal-desc { color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+        .modal-copy-btn {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 10px;
+        }
+        .modal-copy-btn:hover { box-shadow: 0 6px 20px rgba(123, 47, 247, 0.4); }
+        .modal-close-btn {
+            padding: 12px 28px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .modal-close-btn:hover { border-color: var(--text-secondary); color: var(--text-primary); }
+        .modal-close-x {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 22px;
+            cursor: pointer;
+        }
+        .modal-close-x:hover { color: var(--text-primary); }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            color: #fff;
+            padding: 13px 28px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 14px;
+            z-index: 999;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 30px rgba(123, 47, 247, 0.4);
+            pointer-events: none;
+        }
+        .toast.visible { transform: translateX(-50%) translateY(0); }
+        .ticker {
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+            padding: 12px 0;
+            background: linear-gradient(90deg, transparent, rgba(123, 47, 247, 0.06), transparent);
+            margin-bottom: 20px;
+        }
+        .ticker-track {
+            display: flex;
+            gap: 36px;
+            animation: scrollTicker 40s linear infinite;
+            white-space: nowrap;
+        }
+        .ticker-item { font-size: 14px; font-weight: 700; color: var(--accent-purple); opacity: 0.5; flex-shrink: 0; }
+        @keyframes scrollTicker {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+        footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 12px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
+        }
+        .scroll-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(123, 47, 247, 0.4);
+        }
+        .scroll-top.show { opacity: 1; visibility: visible; }
+        .scroll-top:hover { transform: translateY(-3px); }
+        @media (max-width: 680px) {
+            .grid { grid-template-columns: 1fr; padding: 0 16px 30px; }
+            h1 { font-size: 18px; }
+            .stats-row { gap: 20px; }
+            .stat-num { font-size: 24px; }
+            .modal-box { padding: 28px 20px; }
+            .modal-phrase { font-size: 22px; }
+            .filters { gap: 8px; padding: 0 16px 24px; }
+            .filter-chip { padding: 7px 14px; font-size: 12px; }
+            .bem-container { padding: 0 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-gradient"></div>
+<div class="stars" id="starsEl"></div>
+
+<header>
+    <div class="title-wrapper">
+        <div class="title-glow"></div>
+        <h1>МЕЛЛСТРОЙ МЕМ</h1>
+    </div>
+    <p class="subtitle">Все легендарные фразы <span>Mellstroy</span> в одном месте 🔥</p>
+    <div class="stats-row">
+        <div class="stat-box">
+            <div class="stat-num" id="countPhrases">123</div>
+            <div class="stat-label">Фраз</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-num" id="countLikes">671488</div>
+            <div class="stat-label">Лайков</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Мемов</div>
+        </div>
+    </div>
+</header>
+
+<div class="ticker">
+    <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<!-- СЧЁТЧИК БЕМ (точная копия из второго кода) -->
+<div class="bem-container">
+    <div class="gradient-border p-8 text-center">
+        <h1 class="font-meme text-2xl mb-2 neon-text">🥊 СЧЁТЧИК БЕМ 🥊</h1>
+        <p class="text-gray-400 text-sm mb-6">Нажимай и говори БЕМ</p>
+
+        <div class="bem-counter font-meme mb-4" id="bemDisplay">0</div>
+
+        <div class="flex flex-col items-center gap-4">
+            <button id="bemBtn" class="pulse-btn bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold text-2xl px-12 py-6 rounded-2xl hover:shadow-2xl hover:shadow-pink-500/30 transition-all active:scale-95 select-none">
+                🥊 БЕМ! 🥊
+            </button>
+            <audio id="bemAudio" preload="auto" src="bem.mp3"></audio>
+
+            <div class="progress-bar w-full">
+                <div class="progress-fill" id="bemProgress" style="width: 0%"></div>
+            </div>
+
+            <p class="text-sm text-gray-400" id="bemLevel">Уровень: Новичок</p>
+
+            <button id="resetBemBtn" class="text-xs text-gray-500 hover:text-pink-400 transition-colors cursor-pointer select-none">
+                🔄 Сбросить счётчик
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="search-wrap">
+    <input type="text" class="search-box" id="searchBox" placeholder="Ищи мемную фразу..." autocomplete="off">
+    <span class="search-icon">🔍</span>
+</div>
+
+<div class="filters" id="filterBar">
+    <button class="filter-chip active" data-f="all">🌐 Все</button>
+    <button class="filter-chip" data-f="legend">👑 Легендарные</button>
+    <button class="filter-chip" data-f="funny">😂 Смешные</button>
+    <button class="filter-chip" data-f="shock">💣 Шок</button>
+    <button class="filter-chip" data-f="classic">🎮 Классика</button>
+    <button class="filter-chip" data-f="philosophy">🧠 Философия</button>
+    <button class="filter-chip" data-f="quote">💬 Цитаты</button>
+</div>
+
+<div class="random-wrap">
+    <button class="random-btn" id="randomBtn">🎲 Случайная фраза</button>
+</div>
+
+<div class="grid" id="grid"></div>
+<div class="no-data" id="noData">
+    <span class="big-emoji">😢</span>
+    Ничего не найдено. Попробуй другой запрос!
+</div>
+
+<div class="overlay" id="overlay">
+    <div class="modal-box" id="modalBox">
+        <button class="modal-close-x" id="closeX">✕</button>
+        <div class="modal-emoji" id="mEmoji"></div>
+        <div class="modal-phrase" id="mPhrase"></div>
+        <div class="modal-tag" id="mTag"></div>
+        <div class="modal-desc" id="mDesc"></div>
+        <button class="modal-copy-btn" id="mCopy">📋 Копировать</button>
+        <button class="modal-close-btn" id="mClose">Закрыть</button>
+    </div>
+</div>
+
+<div class="toast" id="toast">Скопировано!</div>
+<button class="scroll-top" id="scrollTopBtn">↑</button>
+<button class="sound-toggle" id="soundToggle" title="Звуки вкл/выкл">🔊</button>
+
+<footer>
+    <p>Меллстрой Мем © 2026 — Все фразы из интернет-фольклора</p>
+    <p style="margin-top: 6px;">Сделано с 💜 для мем-комьюнити</p>
+</footer>
+
+<script>
+    // ==================== ДАННЫЕ МЕМОВ (из первого кода) ====================
+    const DATA = [
+        { phrase: "БЕМ БЕМ БЕМ", emoji: "💥", cat: "legend", desc: "Главный крик Меллстроя, ставший символом эпохи" },
+        { phrase: "АМ АМ АМ", emoji: "😮", cat: "legend", desc: "Культовое выражение, которое знает каждый" },
+        { phrase: "Молодец маленький молодец", emoji: "👶", cat: "funny", desc: "Комплимент в стиле Меллстроя" },
+        { phrase: "Оу май гад", emoji: "😱", cat: "classic", desc: "Реакция на абсолютно всё" },
+        { phrase: "Ещё посидим", emoji: "⏰", cat: "classic", desc: "Когда стрим не заканчивается никогда" },
+        { phrase: "Ты блять долбаёб", emoji: "🤬", cat: "shock", desc: "Прямая характеристика оппонента" },
+        { phrase: "Я уже красный", emoji: "🥵", cat: "funny", desc: "Физическое состояние от эмоций" },
+        { phrase: "В кофте чёрной драгон мани", emoji: "🧥", cat: "quote", desc: "Описание легендарного аутфита" },
+        { phrase: "А что было до?", emoji: "🤔", cat: "philosophy", desc: "Философский вопрос о прошлом" },
+        { phrase: "Быстрее", emoji: "⚡", cat: "classic", desc: "Призыв к ускорению" },
+        { phrase: "Бабка иди нахуй", emoji: "👵", cat: "shock", desc: "Диалог с бабушкой на стриме" },
+        { phrase: "Ты просто босс", emoji: "👑", cat: "legend", desc: "Высшая форма одобрения" },
+        { phrase: "5 млн баксов", emoji: "💰", cat: "quote", desc: "О больших деньгах и амбициях" },
+        { phrase: "А ещё я педофил", emoji: "🤡", cat: "shock", desc: "Скандальное признание на стриме" },
+        { phrase: "Скажи это сон да?", emoji: "💭", cat: "philosophy", desc: "Сомнение в реальности происходящего" },
+        { phrase: "Салфетка 5", emoji: "🧻", cat: "funny", desc: "Загадочная фраза с глубоким смыслом" },
+        { phrase: "SPERMA2281488", emoji: "🧬", cat: "shock", desc: "Никнейм, ставший мемом" },
+        { phrase: "Хуй стал быстрее падать", emoji: "📉", cat: "shock", desc: "Научное наблюдение на стриме" },
+        { phrase: "Хуй встаёт тяжело", emoji: "😩", cat: "shock", desc: "Честное признание о здоровье" },
+        { phrase: "Обидно", emoji: "😞", cat: "funny", desc: "Когда эмоции зашкаливают" },
+        { phrase: "Кто лучший?", emoji: "🏆", cat: "legend", desc: "Риторический вопрос с очевидным ответом" },
+        { phrase: "Даст не даст", emoji: "🤷", cat: "classic", desc: "Вечная дилемма" },
+        { phrase: "Я щас буду мыться", emoji: "🚿", cat: "quote", desc: "Анонс гигиенических процедур" },
+        { phrase: "Я помылся", emoji: "🧼", cat: "quote", desc: "Отчёт о выполненной миссии" },
+        { phrase: "Блять да наконец-то", emoji: "🎉", cat: "classic", desc: "Реакция на долгожданное событие" },
+        { phrase: "Я лично видел", emoji: "👀", cat: "quote", desc: "Подтверждение очевидцем" },
+        { phrase: "Эту хуйню не сфоткать грех", emoji: "📸", cat: "shock", desc: "Призыв к документированию" },
+        { phrase: "Хуесос блять очкастый усатый гей", emoji: "🤮", cat: "shock", desc: "Развёрнутая характеристика человека" },
+        { phrase: "Сука да пошла ты нахуй дура", emoji: "😤", cat: "shock", desc: "Эмоциональный посыл" },
+        { phrase: "АААААА", emoji: "🗣️", cat: "legend", desc: "Универсальный крик на все случаи жизни" },
+        { phrase: "А так это Герман", emoji: "🧐", cat: "funny", desc: "Узнавание знакомого" },
+        { phrase: "Привет Артур", emoji: "👋", cat: "quote", desc: "Приветствие Артура" },
+        { phrase: "Здарова Денчик", emoji: "🤙", cat: "quote", desc: "Тёплое приветствие Дениса" },
+        { phrase: "Здарова Александр", emoji: "✋", cat: "quote", desc: "Приветствие Александру" },
+        { phrase: "Володя привет", emoji: "🙌", cat: "quote", desc: "Привет Владимиру" },
+        { phrase: "Андрей как твой член?", emoji: "❓", cat: "shock", desc: "Необычный медицинский вопрос" },
+        { phrase: "Спасибо хорошо", emoji: "😊", cat: "funny", desc: "Вежливый ответ на любой вопрос" },
+        { phrase: "А это кто нахуй?", emoji: "🔎", cat: "classic", desc: "Вопрос о незнакомце" },
+        { phrase: "Пойдёт щас возня", emoji: "🎪", cat: "funny", desc: "Предвестник хаоса" },
+        { phrase: "Возня африканская", emoji: "🌍", cat: "funny", desc: "Описание особого вида хаоса" },
+        { phrase: "Это пизда или нормалды", emoji: "😐", cat: "philosophy", desc: "Оценка ситуации по шкале" },
+        { phrase: "Это хуйполды", emoji: "🤷", cat: "funny", desc: "Уникальная оценка происходящего" },
+        { phrase: "Бурмолда или говнолда", emoji: "💩", cat: "funny", desc: "Философская дилемма" },
+        { phrase: "Сядь блять", emoji: "🪑", cat: "classic", desc: "Короткое и ясное указание" },
+        { phrase: "Баба чай", emoji: "🍵", cat: "quote", desc: "Заказ для женщины" },
+        { phrase: "Кофе баба", emoji: "☕", cat: "quote", desc: "Альтернативный заказ" },
+        { phrase: "Чё?", emoji: "❓", cat: "classic", desc: "Универсальный вопрос на всё" },
+        { phrase: "Ебать", emoji: "😳", cat: "classic", desc: "Выражение сильного удивления" },
+        { phrase: "БЛЯЯЯТЬ", emoji: "💢", cat: "legend", desc: "Максимальная степень эмоций" },
+        { phrase: "Регайся и депай", emoji: "💳", cat: "quote", desc: "Призыв к действию" },
+        { phrase: "Виноград сливы", emoji: "🍇", cat: "funny", desc: "Фруктовая абракадабра" },
+        { phrase: "Привет бейби", emoji: "😘", cat: "quote", desc: "Любезное обращение" },
+        { phrase: "Птички бурмалдички", emoji: "🐦", cat: "funny", desc: "Ласковое название существ" },
+        { phrase: "Заяц бурмалдаец", emoji: "🐰", cat: "funny", desc: "Ещё одно уникальное прозвище" },
+        { phrase: "Это интересно действительно", emoji: "🧠", cat: "philosophy", desc: "Признание интереса к теме" },
+        { phrase: "Так это вывод", emoji: "📊", cat: "philosophy", desc: "Логическое завершение мысли" },
+        { phrase: "Был бы ты тут", emoji: "🫵", cat: "quote", desc: "Обращение к отсутствующему" },
+        { phrase: "Я вызываю тебя на бой", emoji: "⚔️", cat: "legend", desc: "Вызов на дуэль" },
+        { phrase: "Да пошло оно всё нахуй", emoji: "🖕", cat: "legend", desc: "Финальное решение всех проблем" },
+        { phrase: "Убери ноги животное", emoji: "🦶", cat: "shock", desc: "Обращение к невоспитанному существу" },
+        { phrase: "Ёбаный чемодан", emoji: "🧳", cat: "funny", desc: "Неодобрительная характеристика предмета" },
+        { phrase: "Я тебя убил", emoji: "💀", cat: "shock", desc: "Констатация факта" },
+        { phrase: "Щавель нахуй", emoji: "🌿", cat: "funny", desc: "Категорический отказ от зелени" },
+        { phrase: "Позишн намбер ван", emoji: "1️⃣", cat: "legend", desc: "Заявление о первенстве" },
+        { phrase: "Пизда моим бабкам", emoji: "💸", cat: "shock", desc: "Осознание финансовых потерь" },
+        { phrase: "Чечевичный суп из семи залуп салатик бурмалдатик", emoji: "🍲", cat: "shock", desc: "Уникальный кулинарный рецепт" },
+        { phrase: "Я просто красный а не жёлтый", emoji: "🔴", cat: "funny", desc: "Уточнение цветового статуса" },
+        { phrase: "Всё пизда очко дырявое", emoji: "🕳️", cat: "shock", desc: "Описание катастрофической ситуации" },
+        { phrase: "Подъёбывайте меня", emoji: "😏", cat: "classic", desc: "Приглашение к троллингу" },
+        { phrase: "Хахаха это пиздец", emoji: "😂", cat: "funny", desc: "Смех сквозь слёзы" },
+        { phrase: "Это не смешно на самом деле", emoji: "😐", cat: "philosophy", desc: "Внезапное осознание" },
+        { phrase: "Такого не бывает", emoji: "🙅", cat: "philosophy", desc: "Отрицание реальности" },
+        { phrase: "Армия либо зона", emoji: "⛓️", cat: "shock", desc: "Два варианта будущего" },
+        { phrase: "Нет отказано", emoji: "❌", cat: "classic", desc: "Официальный ответ" },
+        { phrase: "Парни прикиньте", emoji: "👥", cat: "quote", desc: "Вступление к невероятной истории" },
+        { phrase: "Нюхай быстрее", emoji: "👃", cat: "shock", desc: "Срочная команда" },
+        { phrase: "Вот это ты жестканул", emoji: "💪", cat: "funny", desc: "Оценка чьей-то жёсткости" },
+        { phrase: "Я не знаю где ты будешь жить", emoji: "🏚️", cat: "quote", desc: "Прогноз о будущем собеседника" },
+        { phrase: "А сейчас я еду в стрипуху", emoji: "💃", cat: "quote", desc: "Анонс вечерних планов" },
+        { phrase: "Изи бриджи", emoji: "😎", cat: "classic", desc: "О лёгкости происходящего" },
+        { phrase: "Во место", emoji: "📍", cat: "funny", desc: "Оценка локации" },
+        { phrase: "Бабок нет даже на шлюх", emoji: "😭", cat: "shock", desc: "Жалоба на финансовое положение" },
+        { phrase: "Дай его", emoji: "🤲", cat: "classic", desc: "Короткое требование" },
+        { phrase: "Доставай добро", emoji: "🎁", cat: "quote", desc: "Призыв поделиться" },
+        { phrase: "Двадцать три нахуй", emoji: "🔢", cat: "funny", desc: "Загадочное числовое выражение" },
+        { phrase: "Как я могу быть нищим", emoji: "🤑", cat: "philosophy", desc: "Экзистенциальный вопрос о богатстве" },
+        { phrase: "Нищетой воняет", emoji: "👃", cat: "shock", desc: "Обонятельная оценка ситуации" },
+        { phrase: "Ну как тебе сказать", emoji: "🤔", cat: "philosophy", desc: "Начало сложного объяснения" },
+        { phrase: "Бездельник спит когда захочет", emoji: "😴", cat: "philosophy", desc: "Мудрость о лени" },
+        { phrase: "Ой ой ой ой ой", emoji: "😬", cat: "funny", desc: "Реакция на приближающуюся катастрофу" },
+        { phrase: "Танцуем все", emoji: "💃", cat: "funny", desc: "Призыв к всеобщему веселью" },
+        { phrase: "Палка с пиздой", emoji: "🪄", cat: "shock", desc: "Описание магического предмета" },
+        { phrase: "Виктор Алексеевич", emoji: "🎓", cat: "quote", desc: "Обращение по имени-отчеству" },
+        { phrase: "Сын Чикатило", emoji: "🔪", cat: "shock", desc: "Семейная характеристика" },
+        { phrase: "Вот с такою елдой", emoji: "🍆", cat: "shock", desc: "Демонстрация размера" },
+        { phrase: "Недовольность", emoji: "😒", cat: "classic", desc: "Констатация эмоции" },
+        { phrase: "Это ненормальная хуйня", emoji: "🤪", cat: "funny", desc: "Диагностика ситуации" },
+        { phrase: "Ну скинь как-нибудь заявку", emoji: "📱", cat: "quote", desc: "Призыв к добавлению в друзья" },
+        { phrase: "Мёд по телу", emoji: "🍯", cat: "funny", desc: "Описание приятных ощущений" },
+        { phrase: "Да будет свет", emoji: "💡", cat: "legend", desc: "Библейская цитата в исполнении Меллстроя" },
+        { phrase: "Это он это реально он", emoji: "😲", cat: "classic", desc: "Узнавание знаменитости" },
+        { phrase: "Раздавай бля проститутка", emoji: "🃏", cat: "shock", desc: "Команда в карточной игре" },
+        { phrase: "Сегодня весь день пил пиво", emoji: "🍺", cat: "quote", desc: "Отчёт о проведённом дне" },
+        { phrase: "Начинаем наше лудо приключение", emoji: "🎲", cat: "quote", desc: "Старт игрового стрима" },
+        { phrase: "Ну что you are ready?", emoji: "🇬🇧", cat: "funny", desc: "Билингвальный призыв к действию" },
+        { phrase: "Ты сука пёс ёбаный", emoji: "🐕", cat: "shock", desc: "Зоологическое сравнение" },
+        { phrase: "Блять давай", emoji: "💪", cat: "classic", desc: "Мотивационный призыв" },
+        { phrase: "Дай хотя бы хлеба", emoji: "🍞", cat: "funny", desc: "Скромная просьба" },
+        { phrase: "Нахуй я это посмотрел", emoji: "🤦", cat: "funny", desc: "Раскаяние о потраченном времени" },
+        { phrase: "А где колбаска?", emoji: "🌭", cat: "funny", desc: "Поиск еды" },
+        { phrase: "Я на тебя нападу как дикий кабан", emoji: "🐗", cat: "shock", desc: "Угроза в стиле животного мира" },
+        { phrase: "Он сидит пол часа в тик-токе", emoji: "📱", cat: "quote", desc: "Наблюдение за зависимостью" },
+        { phrase: "Ну чё то чё то", emoji: "🤷", cat: "funny", desc: "Неопределённое выражение" },
+        { phrase: "Вот тебя взять раздеть и по попке", emoji: "🍑", cat: "shock", desc: "Неоднозначное предложение" },
+        { phrase: "А щас на лодочке", emoji: "🚣", cat: "funny", desc: "Морское приключение" },
+        { phrase: "Что за бизнес сука", emoji: "💼", cat: "shock", desc: "Вопрос о коммерческой деятельности" },
+        { phrase: "Думал в сказку попал?", emoji: "🧚", cat: "philosophy", desc: "Возвращение в реальность" },
+        { phrase: "Ты чё то сука борщишь", emoji: "🍲", cat: "shock", desc: "Упрёк в чрезмерном перегибании палки" },
+        { phrase: "Я пьяный?", emoji: "🍺", cat: "funny", desc: "Вопрос, который трезвый человек не задаёт" },
+        { phrase: "Нихуя ты блять", emoji: "😤", cat: "shock", desc: "Реакция на наглость собеседника" },
+        { phrase: "В разные периоды времени я немножко меняюсь", emoji: "🦋", cat: "philosophy", desc: "Глубокое размышление о саморазвитии" },
+        { phrase: "О да детка ты такая сладкая конфетка", emoji: "🍬", cat: "funny", desc: "Комплимент в стиле Меллстроя" },
+        { phrase: "Иди нахуй долбаёб", emoji: "🤬", cat: "classic", desc: "Откуда я знаю" }
+    ];
+
+    // ========== ФУНКЦИОНАЛ МЕМОВ ==========
+    let activeFilter = 'all';
+    let searchVal = '';
+    let currentModalIdx = -1;
+    const catLabels = { legend: 'Легендарная', funny: 'Смешная', shock: 'Шок', classic: 'Классика', philosophy: 'Философия', quote: 'Цитата' };
+    const catTagClass = { legend: 'tag-legend', funny: 'tag-funny', shock: 'tag-shock', classic: 'tag-classic', philosophy: 'tag-philosophy', quote: 'tag-quote' };
+
+    function getFiltered() {
+        let list = DATA;
+        if (activeFilter !== 'all') list = list.filter(m => m.cat === activeFilter);
+        if (searchVal.trim()) {
+            const q = searchVal.toLowerCase().trim();
+            list = list.filter(m => m.phrase.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q));
+        }
+        return list;
+    }
+
+    function render() {
+        const grid = document.getElementById('grid');
+        const noData = document.getElementById('noData');
+        const items = getFiltered();
+        if (items.length === 0) {
+            grid.innerHTML = '';
+            noData.style.display = 'block';
+            updateStats();
+            return;
+        }
+        noData.style.display = 'none';
+        grid.innerHTML = items.map((item, i) => {
+            const origIdx = DATA.indexOf(item);
+            const delay = Math.min(i * 0.04, 0.8);
+            const likes = (item.likes || Math.floor(Math.random() * 5000 + 500));
+            return `
+                <div class="card" style="animation-delay: ${delay}s" data-idx="${origIdx}" onclick="openModal(${origIdx})">
+                    <div class="card-header">
+                        <span class="card-emoji">${item.emoji}</span>
+                        <span class="card-tag ${catTagClass[item.cat]}">${catLabels[item.cat]}</span>
+                    </div>
+                    <div class="card-phrase">${item.phrase}</div>
+                    <div class="card-desc">${item.desc}</div>
+                    <div class="card-footer">
+                        <button class="copy-trigger" onclick="copyText(event, ${origIdx})">
+                            <span class="copy-label">📋 Копировать</span>
+                            <span class="copied-label" style="display:none">✅ Готово</span>
+                        </button>
+                        <div class="like-area">
+                            <button class="heart-btn" onclick="doLike(event, ${origIdx})">❤️</button>
+                            <span class="like-count" id="lc-${origIdx}">${likes.toLocaleString()}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        updateStats();
+    }
+
+    function updateStats() {
+        document.getElementById('countPhrases').textContent = DATA.length;
+    }
+
+    window.copyText = function(e, idx) {
+        e.stopPropagation();
+        navigator.clipboard.writeText(DATA[idx].phrase).then(() => {
+            const btn = e.currentTarget;
+            btn.classList.add('copied');
+            btn.querySelector('.copy-label').style.display = 'none';
+            btn.querySelector('.copied-label').style.display = 'inline';
+            showToast('📋 «' + DATA[idx].phrase + '» скопирована!');
+            setTimeout(() => {
+                btn.classList.remove('copied');
+                btn.querySelector('.copy-label').style.display = 'inline';
+                btn.querySelector('.copied-label').style.display = 'none';
+            }, 2000);
+        });
+    };
+    window.doLike = function(e, idx) {
+        e.stopPropagation();
+        const btn = e.currentTarget;
+        btn.classList.add('liked');
+        DATA[idx].likes = (DATA[idx].likes || 3000) + 1;
+        document.getElementById('lc-' + idx).textContent = DATA[idx].likes.toLocaleString();
+        setTimeout(() => btn.classList.remove('liked'), 500);
+    };
+    window.openModal = function(idx) {
+        currentModalIdx = idx;
+        const item = DATA[idx];
+        document.getElementById('mEmoji').textContent = item.emoji;
+        document.getElementById('mPhrase').textContent = item.phrase;
+        document.getElementById('mDesc').textContent = item.desc;
+        const tagEl = document.getElementById('mTag');
+        tagEl.innerHTML = `<span class="card-tag ${catTagClass[item.cat]}">${catLabels[item.cat]}</span>`;
+        document.getElementById('overlay').classList.add('show');
+        document.body.style.overflow = 'hidden';
+    };
+    function closeModal() {
+        document.getElementById('overlay').classList.remove('show');
+        document.body.style.overflow = '';
+    }
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.classList.add('visible');
+        setTimeout(() => toast.classList.remove('visible'), 2500);
+    }
+
+    // ========== СЧЁТЧИК БЕМ И ЗВУК (из второго кода) ==========
+    let bemsCount = parseInt(localStorage.getItem('bemsCount') || '0');
+    let soundEnabled = true;
+    let bemPauseTimer = null;
+    let audioCtx = null;
+    function getAudioCtx() {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        return audioCtx;
+    }
+    function playBeep(freq, duration, type = 'sine') {
+        if (!soundEnabled) return;
+        try {
+            const ctx = getAudioCtx();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, ctx.currentTime);
+            gain.gain.setValueAtTime(0.15, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + duration);
+        } catch(e) {}
+    }
+    function stopMp3AndReset() {
+        const audio = document.getElementById('bemAudio');
+        if (audio) { audio.pause(); audio.currentTime = 0; }
+        if (bemPauseTimer) { clearTimeout(bemPauseTimer); bemPauseTimer = null; }
+    }
+    function pauseMp3KeepPosition() {
+        const audio = document.getElementById('bemAudio');
+        if (audio && !audio.paused) audio.pause();
+        if (bemPauseTimer) { clearTimeout(bemPauseTimer); bemPauseTimer = null; }
+    }
+    function schedulePause() {
+        if (bemPauseTimer) clearTimeout(bemPauseTimer);
+        bemPauseTimer = setTimeout(() => pauseMp3KeepPosition(), 500);
+    }
+    function playBemSound() {
+        if (!soundEnabled) return;
+        const audio = document.getElementById('bemAudio');
+        if (!audio) return;
+        if (!audio.paused && audio.currentTime > 0 && !audio.ended) {
+            schedulePause();
+            return;
+        }
+        const playPromise = audio.play();
+        if (playPromise !== undefined) playPromise.then(() => schedulePause()).catch(e => console.warn(e));
+    }
+    function updateBemDisplay() {
+        document.getElementById('bemDisplay').textContent = bemsCount.toLocaleString();
+        const progress = (bemsCount % 100);
+        document.getElementById('bemProgress').style.width = progress + '%';
+        let level = 'Новичок';
+        if (bemsCount >= 5000) level = '👑👑 БЕМ БОГ';
+        else if (bemsCount >= 2000) level = '👑 БЕМ БОСС';
+        else if (bemsCount >= 1000) level = '👑 БЕМ МАСТЕР';
+        else if (bemsCount >= 500) level = '🔥 БЕМ ВЕТЕРАН';
+        else if (bemsCount >= 200) level = '💪 БЕМ БОЕЦ';
+        else if (bemsCount >= 100) level = '⚡ БЕМ УЧЕНИК';
+        else if (bemsCount >= 50) level = '🥊 БЕМ НОВИЧОК';
+        else if (bemsCount >= 10) level = '👶 БЕМ МЛАДЕНЕЦ';
+        document.getElementById('bemLevel').textContent = `Уровень: ${level}`;
+    }
+    function spawnFloatingEmoji(emoji, element) {
+        const rect = element.getBoundingClientRect();
+        const el = document.createElement('div');
+        el.className = 'floating-emoji';
+        el.textContent = emoji;
+        el.style.left = (rect.left + rect.width/2 - 16) + 'px';
+        el.style.top = (rect.top - 10) + 'px';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 2000);
+    }
+    function showAchievement(title, desc) {
+        const popup = document.createElement('div');
+        popup.className = 'achievement-popup';
+        popup.innerHTML = `<div class="text-2xl mb-1">🏆</div><div class="font-bold text-sm">${title}</div><div class="text-xs opacity-80">${desc}</div>`;
+        document.body.appendChild(popup);
+        playBeep(600, 0.2, 'sine');
+        setTimeout(() => playBeep(800, 0.3, 'sine'), 150);
+        setTimeout(() => popup.remove(), 3500);
+    }
+
+    // Обработчики счётчика
+    document.getElementById('bemBtn').addEventListener('click', function() {
+        bemsCount++;
+        localStorage.setItem('bemsCount', bemsCount.toString());
+        updateBemDisplay();
+        this.classList.remove('shake');
+        void this.offsetWidth;
+        this.classList.add('shake');
+        playBemSound();
+        spawnFloatingEmoji('🥊', this);
+        spawnFloatingEmoji('💥', this);
+        spawnFloatingEmoji('🔥', this);
+        if (bemsCount === 10) showAchievement('БЕМ МЛАДЕНЕЦ', '10 бемов! Начало положено!');
+        else if (bemsCount === 50) showAchievement('БЕМ НОВИЧОК', '50 бемов! Ты на пути!');
+        else if (bemsCount === 100) showAchievement('БЕМ УЧЕНИК', '100 бемов! Мастерство растёт!');
+        else if (bemsCount === 200) showAchievement('БЕМ БОЕЦ', '200 бемов! Ты воин!');
+        else if (bemsCount === 500) showAchievement('БЕМ ВЕТЕРАН', '500 бемов! Уважение!');
+        else if (bemsCount === 1000) showAchievement('БЕМ МАСТЕР', '1000 бемов! Молодец!');
+        else if (bemsCount === 1000) showAchievement('БЕМ БОСС', '3000 бемов! Ты просто Босс!');
+        else if (bemsCount === 1000) showAchievement('БЕМ БОГ', '5000 бемов! Оу май гад!');
+    });
+    document.getElementById('resetBemBtn').addEventListener('click', () => {
+        if (confirm('Точно сбросить счётчик БЕМ?')) {
+            bemsCount = 0;
+            localStorage.setItem('bemsCount', '0');
+            updateBemDisplay();
+            playBeep(300, 0.3, 'sawtooth');
+        }
+    });
+    document.getElementById('soundToggle').addEventListener('click', () => {
+        soundEnabled = !soundEnabled;
+        document.getElementById('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
+        if (!soundEnabled) stopMp3AndReset();
+        else playBeep(600, 0.15, 'sine');
+    });
+
+    // ========== ИНИЦИАЛИЗАЦИЯ ОСТАЛЬНОГО ==========
+    function createTicker() {
+        const track = document.getElementById('tickerTrack');
+        const phrases = DATA.map(d => d.phrase);
+        const all = [...phrases, ...phrases];
+        track.innerHTML = all.map(p => `<span class="ticker-item">✦ ${p}</span>`).join('');
+    }
+    function createStars() {
+        const el = document.getElementById('starsEl');
+        for (let i = 0; i < 80; i++) {
+            const s = document.createElement('div');
+            s.className = 'star';
+            s.style.left = Math.random() * 100 + '%';
+            s.style.top = Math.random() * 100 + '%';
+            s.style.animationDelay = Math.random() * 3 + 's';
+            s.style.animationDuration = (2 + Math.random() * 3) + 's';
+            el.appendChild(s);
+        }
+    }
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) scrollTopBtn.classList.add('show');
+        else scrollTopBtn.classList.remove('show');
+    });
+    scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    document.getElementById('closeX').addEventListener('click', closeModal);
+    document.getElementById('mClose').addEventListener('click', closeModal);
+    document.getElementById('overlay').addEventListener('click', (e) => { if (e.target === document.getElementById('overlay')) closeModal(); });
+    document.getElementById('mCopy').addEventListener('click', () => {
+        if (currentModalIdx !== -1) navigator.clipboard.writeText(DATA[currentModalIdx].phrase).then(() => showToast('📋 «' + DATA[currentModalIdx].phrase + '» скопирована!'));
+    });
+    document.getElementById('randomBtn').addEventListener('click', () => {
+        const idx = Math.floor(Math.random() * DATA.length);
+        openModal(idx);
+    });
+    document.getElementById('searchBox').addEventListener('input', (e) => {
+        searchVal = e.target.value;
+        render();
+    });
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            activeFilter = chip.dataset.f;
+            render();
+        });
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+    createStars();
+    createTicker();
+    render();
+    updateBemDisplay();
+</script>
+</body>
+</html>
